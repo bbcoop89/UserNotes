@@ -1,6 +1,7 @@
 package com.brit.usernotes.db;
 
 import com.brit.usernotes.core.Note;
+import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 
@@ -20,5 +21,10 @@ public class NoteDAO extends AbstractDAO<Note>
                         "com.brit.usernotes.core.Note.findAll"
                 )
         );
+    }
+
+    public Optional<Note> findById(long id)
+    {
+        return Optional.fromNullable(get(id));
     }
 }
