@@ -66,4 +66,19 @@ public class NoteResource
 
         return note;
     }
+
+    @PUT
+    @UnitOfWork
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Note update(Note note)
+    {
+        note.setNote(note.getNote());
+        note.setTitle(note.getTitle());
+        note.setLastUpdate(new Time(new Date().getTime()));
+
+        this.noteDAO.save(note);
+
+        return note;
+    }
 }

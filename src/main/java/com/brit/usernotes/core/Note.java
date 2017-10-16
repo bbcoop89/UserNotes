@@ -1,5 +1,10 @@
 package com.brit.usernotes.core;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.sql.Time;
 import java.util.Date;
@@ -35,7 +40,19 @@ public class Note
     @Column(name = "note_last_update_time")
     private Time lastUpdate;
 
-    public Note() { }
+    @PrePersist
+    protected void onCreate() {
+        this.create = new Time(new Date().getTime());
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.lastUpdate = new Time(new Date().getTime());
+    }
+
+    public Note() {
+        this.create = new Time(new Date().getTime());
+    }
 
     public Note(String title, String note, Time create, Time lastUpdate) {
         this.title = title;
