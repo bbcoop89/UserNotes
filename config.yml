@@ -1,0 +1,15 @@
+server:
+    applicationConnectors:
+        - type: http
+          port: 8080
+        - type: https
+          port: 8444
+          keyStorePath: usernotes.keystore
+          keyStorePassword: p@ssw0rd
+          validateCerts: false
+
+database:
+    driverClass: com.mysql.jdbc.Driver
+    user: root
+    password: root
+    url: jdbc:mysql://localhost:8889/britTech
