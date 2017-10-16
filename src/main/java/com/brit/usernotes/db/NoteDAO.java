@@ -27,4 +27,9 @@ public class NoteDAO extends AbstractDAO<Note>
     {
         return Optional.fromNullable(get(id));
     }
+
+    public Note save(Note note)
+    {
+        return persist(note);
+    }
 }

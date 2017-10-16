@@ -43,4 +43,11 @@ public class NoteResource
     {
         return this.noteDAO.findById(id.get());
     }
+
+    @POST
+    @UnitOfWork
+    public Note saveNote(Note note)
+    {
+        return this.noteDAO.save(note);
+    }
 }
