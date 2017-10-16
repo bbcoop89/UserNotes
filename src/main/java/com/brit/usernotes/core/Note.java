@@ -10,6 +10,10 @@ import java.util.Date;
         @NamedQuery(
                 name = "com.brit.usernotes.core.Note.findAll",
                 query = "select n from Note n"
+        ),
+        @NamedQuery(
+                name = "com.brit.usernotes.core.Note.delete",
+                query = "delete from Note n where n.id = :id"
         )
 })
 public class Note
@@ -31,11 +35,7 @@ public class Note
     @Column(name = "note_last_update_time")
     private Time lastUpdate;
 
-    public Note() {
-        Date today = new Date();
-        this.create = new Time(today.getTime());
-        this.lastUpdate = new Time(today.getTime());
-    }
+    public Note() { }
 
     public Note(String title, String note, Time create, Time lastUpdate) {
         this.title = title;

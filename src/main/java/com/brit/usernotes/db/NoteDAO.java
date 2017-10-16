@@ -32,4 +32,14 @@ public class NoteDAO extends AbstractDAO<Note>
     {
         return persist(note);
     }
+
+    public void delete(Note note)
+    {
+        namedQuery(
+                "com.brit.usernotes.core.Note.delete"
+        )
+                .setParameter("id", note.getId())
+                .executeUpdate();
+    }
+
 }

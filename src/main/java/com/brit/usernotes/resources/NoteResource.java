@@ -8,6 +8,8 @@ import io.dropwizard.jersey.params.LongParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 
 @Path("/notes")
@@ -49,5 +51,19 @@ public class NoteResource
     public Note saveNote(Note note)
     {
         return this.noteDAO.save(note);
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @UnitOfWork
+    public Optional<Note> delete(@PathParam("id") LongParam id)
+    {
+        Optional<Note> note = this.noteDAO.findById(id.get());
+
+        if(note.isPresent()) {
+            this.noteDAO.delete(note.get());
+        }
+
+        return note;
     }
 }
