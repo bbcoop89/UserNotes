@@ -84,6 +84,11 @@
             <version>1.14.6</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>20041127.091804</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -191,7 +196,7 @@
                 <configuration>
                     <changeLogFile>src/main/resources/migrations.xml</changeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost:8889/parse_config</url>
+                    <url>jdbc:mysql://localhost:8889/BritTech</url>
                     <username>root</username>
                     <password>root</password>
                 </configuration>

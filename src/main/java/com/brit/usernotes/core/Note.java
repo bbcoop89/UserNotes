@@ -19,6 +19,10 @@ import java.util.Date;
         @NamedQuery(
                 name = "com.brit.usernotes.core.Note.delete",
                 query = "delete from Note n where n.id = :id"
+        ),
+        @NamedQuery(
+                name = "com.brit.usernotes.core.Note.findForUser",
+                query = "select n from Note n where n.user.id = :id"
         )
 })
 public class Note
@@ -39,6 +43,10 @@ public class Note
 
     @Column(name = "note_last_update_time")
     private Time lastUpdate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @PrePersist
     protected void onCreate() {
@@ -67,6 +75,14 @@ public class Note
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTitle() {

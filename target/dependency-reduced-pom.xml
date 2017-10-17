@@ -112,7 +112,7 @@
         <configuration>
           <changeLogFile>src/main/resources/migrations.xml</changeLogFile>
           <driver>com.mysql.jdbc.Driver</driver>
-          <url>jdbc:mysql://localhost:8889/parse_config</url>
+          <url>jdbc:mysql://localhost:8889/BritTech</url>
           <username>root</username>
           <password>root</password>
         </configuration>
@@ -126,10 +126,6 @@
       <version>0.8.2</version>
       <scope>test</scope>
       <exclusions>
-        <exclusion>
-          <artifactId>junit</artifactId>
-          <groupId>junit</groupId>
-        </exclusion>
         <exclusion>
           <artifactId>mockito-core</artifactId>
           <groupId>org.mockito</groupId>

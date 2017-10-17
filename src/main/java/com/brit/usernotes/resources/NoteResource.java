@@ -1,8 +1,10 @@
 package com.brit.usernotes.resources;
 
 import com.brit.usernotes.core.Note;
+import com.brit.usernotes.core.User;
 import com.brit.usernotes.db.NoteDAO;
 import com.google.common.base.Optional;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
 
@@ -33,32 +35,34 @@ public class NoteResource
 
     @GET
     @UnitOfWork
-    public List<Note> getNotes()
+    public List<Note> getNotes(@Auth User user)
     {
-        return this.noteDAO.findAll();
+        return this.noteDAO.findForUser(user.getId());
     }
 
     @GET
     @Path("/{id}")
     @UnitOfWork
-    public Optional<Note> getNote(@PathParam("id")LongParam id)
+    public Optional<Note> getNote(@PathParam("id")LongParam id, @Auth User user)
     {
-        return this.noteDAO.findById(id.get());
+        return this.findIfAuthorized(id.get(), user.getId());
     }
 
     @POST
     @UnitOfWork
-    public Note saveNote(Note note)
+    public Note saveNote(Note note, @Auth User user)
     {
+        note.setUser(user);
+        note.setLastUpdate(new Time(new Date().getTime()));
         return this.noteDAO.save(note);
     }
 
     @DELETE
     @Path("/{id}")
     @UnitOfWork
-    public Optional<Note> delete(@PathParam("id") LongParam id)
+    public Optional<Note> delete(@PathParam("id") LongParam id, @Auth User user)
     {
-        Optional<Note> note = this.noteDAO.findById(id.get());
+        Optional<Note> note = this.findIfAuthorized(id.get(), user.getId());
 
         if(note.isPresent()) {
             this.noteDAO.delete(note.get());
@@ -71,8 +75,12 @@ public class NoteResource
     @UnitOfWork
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Note update(Note note)
+    public Note update(Note note, @Auth User user)
     {
+        if(note.getUser().getId() != user.getId()) {
+            throw new ForbiddenException("You are not authorized to update this resource");
+        }
+
         note.setNote(note.getNote());
         note.setTitle(note.getTitle());
         note.setLastUpdate(new Time(new Date().getTime()));
@@ -80,5 +88,16 @@ public class NoteResource
         this.noteDAO.save(note);
 
         return note;
+    }
+
+    public Optional<Note> findIfAuthorized(long noteId, long userId)
+    {
+        Optional<Note> result = this.noteDAO.findById(noteId);
+
+        if(result.isPresent() && userId != result.get().getUser().getId()) {
+            throw new ForbiddenException("You are not authorized to view this resource");
+        }
+
+        return result;
     }
 }

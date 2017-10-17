@@ -42,4 +42,14 @@ public class NoteDAO extends AbstractDAO<Note>
                 .executeUpdate();
     }
 
+    public List<Note> findForUser(long userId)
+    {
+        return list(
+                namedQuery(
+                        "com.brit.usernotes.core.Note.findForUser"
+                )
+                .setParameter("id", userId)
+        );
+    }
+
 }

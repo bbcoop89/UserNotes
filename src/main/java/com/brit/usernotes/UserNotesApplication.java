@@ -1,9 +1,14 @@
 package com.brit.usernotes;
 
+import com.brit.usernotes.auth.DBAuthenticator;
 import com.brit.usernotes.core.Note;
+import com.brit.usernotes.core.User;
 import com.brit.usernotes.db.NoteDAO;
+import com.brit.usernotes.db.UserDAO;
 import com.brit.usernotes.resources.NoteResource;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthFactory;
+import io.dropwizard.auth.basic.BasicAuthFactory;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -13,7 +18,8 @@ public class UserNotesApplication extends Application<UserNotesConfiguration> {
 
     private final HibernateBundle<UserNotesConfiguration> hibernateBundle =
             new HibernateBundle<UserNotesConfiguration>(
-                    Note.class
+                    Note.class,
+                    User.class
             ) {
                 @Override
                 public DataSourceFactory getDataSourceFactory(UserNotesConfiguration userNotesConfiguration) {
@@ -41,8 +47,15 @@ public class UserNotesApplication extends Application<UserNotesConfiguration> {
                     final Environment environment) {
 
         final NoteDAO noteDAO = new NoteDAO(hibernateBundle.getSessionFactory());
+        final UserDAO userDAO = new UserDAO(hibernateBundle.getSessionFactory());
 
         environment.jersey().register(new NoteResource(noteDAO));
+
+        environment.jersey().register(AuthFactory.binder(
+                new BasicAuthFactory<>(
+                        new DBAuthenticator(userDAO), "SECURITY REALM", User.class
+                )
+        ));
     }
 
 }
